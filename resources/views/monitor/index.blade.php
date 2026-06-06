@@ -34,7 +34,18 @@
 </head>
 <body class="bg-gray-900 text-white font-sans overflow-hidden">
 
-    <div class="flex flex-col h-screen">
+    <!-- Audio Unlock Overlay -->
+    <div id="audio-unlock-overlay" class="fixed inset-0 bg-gray-900 bg-opacity-90 flex justify-center items-center z-50">
+        <div class="text-center p-8">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">SISTEM ANTRIAN</h2>
+            <p class="text-lg md:text-xl text-gray-300 mb-8">Klik untuk memulai monitor dan mengaktifkan suara.</p>
+            <button id="start-button" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-xl shadow-lg transition-transform transform hover:scale-105">
+                Mulai
+            </button>
+        </div>
+    </div>
+
+    <div id="main-content" class="flex flex-col h-screen hidden">
         <!-- Header -->
         <header class="relative text-center py-3 bg-gray-800 shadow-lg">
             <div>
@@ -95,6 +106,36 @@
 
     <script>
         let lastCalledTime = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const startButton = document.getElementById('start-button');
+            const overlay = document.getElementById('audio-unlock-overlay');
+            const mainContent = document.getElementById('main-content');
+
+            startButton.addEventListener('click', () => {
+                // Inisialisasi audio context dengan interaksi pengguna
+                if (window.speechSynthesis) {
+                    window.speechSynthesis.cancel();
+                    const dummyUtterance = new SpeechSynthesisUtterance(' ');
+                    dummyUtterance.volume = 0;
+                    window.speechSynthesis.speak(dummyUtterance);
+                }
+
+                // Sembunyikan overlay dan tampilkan konten utama
+                overlay.style.display = 'none';
+                mainContent.classList.remove('hidden');
+
+                // Mulai mengambil data
+                fetchState();
+                setInterval(fetchState, 5000); // Auto-refresh setiap 5 detik
+
+                // Coba putar video jika ada
+                const videoElement = mainContent.querySelector('video');
+                if (videoElement && videoElement.paused) {
+                    videoElement.play().catch(e => console.warn("Autoplay video diblokir:", e));
+                }
+            }, { once: true }); // Hanya jalankan sekali
+        });
 
         function createPanggilanCard(panggilan, isBesar = false) {
             const nomorLengkap = panggilan ? panggilan.nomor_lengkap : '-';
@@ -240,11 +281,6 @@
                 }
             }
         }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchState();
-            setInterval(fetchState, 5000); // Auto-refresh setiap 5 detik
-        });
     </script>
 </body>
 </html>
