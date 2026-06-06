@@ -209,7 +209,7 @@
 
                 } catch (error) {
                     console.error(`Error on ${action}:`, error);
-                    alert(error.message || 'Gagal melakukan aksi. Periksa konsol untuk detail.');
+                    showCustomAlert(error.message || 'Gagal melakukan aksi. Periksa konsol untuk detail.', 'Error');
                 }
             }
 
@@ -222,7 +222,7 @@
             panggilSpesifikBtn.addEventListener('click', () => {
                 const jenisAntrianId = jenisAntrianSelect.value;
                 if (!jenisAntrianId) {
-                    alert('Silakan pilih jenis layanan terlebih dahulu.');
+                    showCustomAlert('Silakan pilih jenis layanan terlebih dahulu.');
                     return;
                 }
                 callAction('panggil-spesifik', { jenis_antrian_id: jenisAntrianId });

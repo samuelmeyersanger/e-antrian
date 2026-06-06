@@ -210,13 +210,13 @@
                 const data = await response.json(); // Selalu coba parse JSON
                 if (!response.ok) {
                     // Jika ada pesan error dari server, tampilkan
-                    alert(data.message || 'Terjadi kesalahan saat melakukan aksi.');
+                    showCustomAlert(data.message || 'Terjadi kesalahan saat melakukan aksi.', 'Error');
                     return;
                 }
                 fetchState(); // Refresh state setelah aksi berhasil
             } catch (error) {
                 console.error('Error posting action:', error);
-                alert('Tidak dapat terhubung ke server.');
+                showCustomAlert('Tidak dapat terhubung ke server.', 'Error');
             }
         }
 

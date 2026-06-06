@@ -41,6 +41,43 @@
                 </div>
             </footer>
         </div>
+
+        <!-- Custom Alert Modal -->
+        <div id="custom-alert-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 hidden">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md mx-4">
+                <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-700 pb-3">
+                    <h3 id="custom-alert-title" class="text-xl font-semibold text-gray-900 dark:text-gray-100">Pemberitahuan</h3>
+                    <button onclick="hideCustomAlert()" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+                <div class="mt-4">
+                    <p id="custom-alert-message" class="text-gray-700 dark:text-gray-300">Isi pesan di sini.</p>
+                </div>
+                <div class="mt-6 text-right">
+                    <button onclick="hideCustomAlert()" class="px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            const customAlertModal = document.getElementById('custom-alert-modal');
+            const customAlertTitle = document.getElementById('custom-alert-title');
+            const customAlertMessage = document.getElementById('custom-alert-message');
+
+            function showCustomAlert(message, title = 'Pemberitahuan') {
+                customAlertTitle.textContent = title;
+                customAlertMessage.textContent = message;
+                customAlertModal.classList.remove('hidden');
+            }
+
+            function hideCustomAlert() {
+                customAlertModal.classList.add('hidden');
+            }
+        </script>
+
         @stack('scripts')
     </body>
 </html>
