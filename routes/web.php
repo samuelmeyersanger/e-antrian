@@ -3,12 +3,50 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WelcomeController; // Tambahkan ini
 use Illuminate\Support\Facades\Route;
+use App\Models\JenisAntrian;
+use App\Models\Antrian;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 // Menggunakan controller untuk halaman utama
 Route::get('/', [WelcomeController::class, 'index']);
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $today = Carbon::today();
+
+    // 1. Ambil semua jenis layanan
+    $jenisAntrians = JenisAntrian::all();
+
+    // 2. Hitung statistik untuk setiap jenis layanan
+    $statistik = $jenisAntrians->map(function ($jenis) use ($today) {
+        $stats = Antrian::where('jenis_antrian_id', $jenis->id)
+            ->whereDate('tanggal', $today)
+            ->selectRaw("
+                SUM(CASE WHEN status = 'selesai' THEN 1 ELSE 0 END) as selesai,
+                SUM(CASE WHEN status = 'tidak-hadir' THEN 1 ELSE 0 END) as tidak_hadir,
+                COUNT(*) as total
+            ")
+            ->first();
+
+        return [
+            'nama' => $jenis->nama,
+            'selesai' => (int) $stats->selesai,
+            'tidak_hadir' => (int) $stats->tidak_hadir,
+            'total' => (int) $stats->total,
+        ];
+    });
+
+    // 3. Hitung total keseluruhan
+    $totalKeseluruhan = [
+        'selesai' => $statistik->sum('selesai'),
+        'tidak_hadir' => $statistik->sum('tidak_hadir'),
+        'total' => $statistik->sum('total'),
+    ];
+
+    return view('dashboard', [
+        'statistik' => $statistik,
+        'totalKeseluruhan' => $totalKeseluruhan,
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
