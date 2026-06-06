@@ -97,6 +97,10 @@
                 <button onclick="handlePanggilUlang()" class="flex-1 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
                     Panggil Ulang
                 </button>`,
+            panggilTerlewat: `
+                <button onclick="handlePanggilTerlewat()" class="w-full px-6 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800">
+                    Panggil Terlewat
+                </button>`,
         };
 
         function updateUI(data) {
@@ -128,12 +132,19 @@
                     <div class="w-full flex gap-4">${actionButtons.selesaikan} ${actionButtons.tidakHadir}</div>
                     <div class="w-full mt-4">${actionButtons.panggilUlang}</div>
                 `;
-            } else if (data.sisa_antrian > 0) {
-                // Tidak ada antrian aktif TAPI ada antrian menunggu: tampilkan Panggil Berikutnya
-                buttonsHTML = actionButtons.panggil;
             } else {
-                // Tidak ada antrian aktif dan tidak ada antrian menunggu
-                buttonsHTML = '<p class="text-gray-500 dark:text-gray-400">Tidak ada antrian berikutnya.</p>';
+                // Tidak ada antrian aktif, tampilkan tombol panggil utama
+                buttonsHTML = `<div class="w-full space-y-4">`;
+                if (data.sisa_antrian > 0) {
+                    buttonsHTML += actionButtons.panggil;
+                }
+                // Selalu tampilkan tombol panggil terlewat sebagai opsi
+                buttonsHTML += actionButtons.panggilTerlewat;
+
+                if (data.sisa_antrian === 0) {
+                     buttonsHTML += '<p class="text-gray-500 dark:text-gray-400 text-center pt-4">Tidak ada antrian berikutnya.</p>';
+                }
+                buttonsHTML += `</div>`;
             }
             tombolAksiContainer.innerHTML = buttonsHTML;
 
@@ -223,6 +234,10 @@
 
         function handleTidakHadir() {
             postAction('{{ route("petugas.panel.tidakHadir") }}');
+        }
+
+        function handlePanggilTerlewat() {
+            postAction('{{ route("petugas.panel.panggilTerlewat") }}');
         }
 
         function handlePanggilSpesifik() {

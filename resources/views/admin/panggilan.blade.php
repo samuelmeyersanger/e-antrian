@@ -46,6 +46,9 @@
                                         <x-primary-button id="panggil-berikutnya" class="w-full justify-center !py-3 !text-lg">
                                             Panggil Berikutnya (Umum)
                                         </x-primary-button>
+                                        <x-secondary-button id="panggil-terlewat" class="w-full justify-center !py-2">
+                                            Panggil Antrian Terlewat
+                                        </x-secondary-button>
                                     </div>
 
                                     <!-- Panggilan Spesifik -->
@@ -102,6 +105,7 @@
             const panggilBerikutnyaBtn = document.getElementById('panggil-berikutnya');
             const panggilUlangBtn = document.getElementById('panggil-ulang');
             const panggilSpesifikBtn = document.getElementById('panggil-spesifik');
+            const panggilTerlewatBtn = document.getElementById('panggil-terlewat');
             const selesaiBtn = document.getElementById('selesai');
             const tidakHadirBtn = document.getElementById('tidak-hadir');
 
@@ -211,6 +215,7 @@
 
             panggilBerikutnyaBtn.addEventListener('click', () => callAction('panggil-berikutnya'));
             panggilUlangBtn.addEventListener('click', () => callAction('panggil-ulang'));
+            panggilTerlewatBtn.addEventListener('click', () => callAction('panggil-terlewat'));
             selesaiBtn.addEventListener('click', () => callAction('selesai'));
             tidakHadirBtn.addEventListener('click', () => callAction('tidak-hadir'));
 

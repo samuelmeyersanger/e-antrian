@@ -51,6 +51,7 @@ Route::middleware(['auth', 'role:petugas,admin'])->prefix('petugas')->name('petu
     Route::post('/panel/panggil-ulang', [PetugasPanelController::class, 'panggilUlang'])->name('panel.panggilUlang');
     Route::post('/panel/selesai', [PetugasPanelController::class, 'selesai'])->name('panel.selesai');
     Route::post('/panel/tidak-hadir', [PetugasPanelController::class, 'tidakHadir'])->name('panel.tidakHadir');
+    Route::post('/panel/panggil-terlewat', [PetugasPanelController::class, 'panggilTerlewat'])->name('panel.panggilTerlewat');
 });
 
 

@@ -245,6 +245,46 @@ class PetugasPanelController extends Controller
         return response()->json(['message' => 'Tidak ada antrian aktif untuk ditandai tidak hadir.'], 404);
     }
 
+    /**
+     * Memanggil kembali antrian yang terlewat (status: tidak-hadir).
+     */
+    public function panggilTerlewat(Request $request)
+    {
+        $loket = $this->getLoketFromRequest($request);
+        if (!$loket) {
+            return response()->json(['message' => 'Loket tidak valid.'], 400);
+        }
+        $today = Carbon::today();
+
+        $result = DB::transaction(function () use ($loket, $today) {
+            // 1. Pastikan tidak ada antrian yang sedang aktif
+            if ($this->adaAntrianAktifDiLoket($loket->id, $today)) {
+                return ['success' => false, 'message' => 'Selesaikan antrian saat ini terlebih dahulu.', 'status' => 409];
+            }
+
+            // 2. Cari antrian terakhir yang tidak hadir hari ini
+            $antrian = Antrian::where('status', 'tidak-hadir')
+                ->whereDate('tanggal', $today)
+                ->orderBy('updated_at', 'desc') // Cari yang paling baru ditandai tidak hadir
+                ->lockForUpdate()
+                ->first();
+
+            // 3. Jika ada, panggil kembali
+            if ($antrian) {
+                $this->panggilAntrian($antrian, $loket->id);
+                return ['success' => true];
+            }
+
+            return ['success' => false, 'message' => 'Tidak ada antrian yang terlewat untuk dipanggil.', 'status' => 404];
+        });
+
+        if (!$result['success']) {
+            return response()->json(['message' => $result['message']], $result['status']);
+        }
+
+        return $this->buildStateResponse($loket);
+    }
+
     // --- Helper Methods --- //
 
     /**
