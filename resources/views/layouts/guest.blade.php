@@ -14,8 +14,8 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
+    <body class="font-sans text-gray-900 antialiased flex flex-col min-h-screen">
+        <div class="flex-grow flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
             <div>
                 <a href="/">
                     @if (isset($pengaturan) && $pengaturan->logo)
@@ -30,8 +30,8 @@
                 {{ $slot }}
             </div>
         </div>
-        <div class="absolute bottom-4 text-center w-full text-gray-500 text-sm">
-                <p>&copy; {{ date('Y') }} SPMB SMPN 4 CIBITUNG. Created by Samuel Meyer Sanger, MTCRE.</p>
+        <div class="py-4 text-center w-full text-gray-500 text-sm bg-gray-100 dark:bg-gray-900">
+            <p>&copy; {{ date('Y') }} SPMB SMPN 4 CIBITUNG. Created by Samuel Meyer Sanger, MTCRE.</p>
         </div>
     </body>
 </html>
